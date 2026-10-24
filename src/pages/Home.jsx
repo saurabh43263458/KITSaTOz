@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   ArrowRight, 
@@ -13,7 +13,8 @@ import {
   Package,
   Wrench,
   Truck,
-  Zap
+  Zap,
+  Layers
 } from 'lucide-react';
 import { useProducts } from '../hooks/useProducts';
 import { ProductCard } from '../components/product/ProductCard';
@@ -22,10 +23,18 @@ import { getWhatsAppNumber } from '../services/whatsappService';
 
 export const Home = () => {
   const { products, loading, error } = useProducts();
-  const bestSellers = products.filter(p => p.bestSeller === true || p.badge === 'Best Seller' || p.badge === '3D Hot Item');
+  const bestSellers = products.filter(p => p.bestSeller === true || p.badge === 'Best Seller' || p.badge === '3D Hot Item' || p.badge === 'Featured Masterpiece');
 
-  // Spotlight items specifically for 3D and mechanical kits
+  const heroVenomImages = [
+    { src: '/products/3d-printed-venom-figurine-front.jpg', label: 'Painted Front' },
+    { src: '/products/3d-printed-venom-figurine-side.jpg', label: 'Side Profile' },
+    { src: '/products/3d-printed-venom-figurine-raw.jpg', label: 'Raw 3D Print' }
+  ];
+  const [selectedHeroImage, setSelectedHeroImage] = useState(0);
+
+  // Spotlight items specifically for 3D and mechanical kits (Venom first)
   const spotlightItems = products.filter(p => 
+    p.id === '3d-printed-venom-symbiote-figurine' ||
     p.id === '3d-printed-kitsatoz-robotic-arm-frame' || 
     p.id === '3d-printed-lord-ganesha-figurine' || 
     p.id === '3d-printed-spider-emblem-wall-art' || 
@@ -99,6 +108,9 @@ export const Home = () => {
               {/* Direct Kit Jump Links */}
               <div className="pt-2 flex flex-wrap items-center gap-2 text-xs">
                 <span className="font-bold text-slate-500 uppercase tracking-wider text-[11px] mr-1">Direct Kit Links:</span>
+                <Link to="/product/3d-printed-venom-symbiote-figurine" className="px-3 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-bold transition-colors shadow-xs flex items-center gap-1">
+                  🕷️ 3D Venom Figurine
+                </Link>
                 <Link to="/shop" className="px-3 py-1.5 rounded-full bg-white hover:bg-brand-50 border border-wood-200 text-slate-700 hover:text-brand-600 font-semibold transition-colors shadow-xs">
                   📦 All Shop Kits
                 </Link>
@@ -131,53 +143,89 @@ export const Home = () => {
 
             </div>
 
-            {/* Right Visual Composition */}
+            {/* Right Visual Composition - Featured Venom 3D Figurine with Interactive Views */}
             <div className="lg:col-span-5 relative">
               <div className="relative mx-auto max-w-md lg:max-w-none">
-                <div className="absolute -inset-4 bg-gradient-to-tr from-brand-300/30 to-wood-300/30 rounded-3xl blur-2xl transform rotate-3 -z-10"></div>
+                <div className="absolute -inset-4 bg-gradient-to-tr from-rose-500/20 via-brand-500/20 to-wood-500/20 rounded-3xl blur-2xl transform rotate-2 -z-10"></div>
                 
-                <div className="relative rounded-3xl overflow-hidden border-4 border-white shadow-soft-lg bg-white">
-                  <Link to="/product/3d-printed-kitsatoz-robotic-arm-frame">
+                <div className="relative rounded-3xl overflow-hidden border-4 border-white shadow-soft-xl bg-slate-950 group">
+                  {/* Main Product Image */}
+                  <Link to="/product/3d-printed-venom-symbiote-figurine" className="block relative overflow-hidden">
                     <img
-                      src="/products/image2.jpeg"
-                      alt="KITSaTOz 3D Printed Robotic Arm Frame Kit"
-                      className="w-full h-80 sm:h-96 object-cover object-center hover:scale-105 transition-transform duration-500"
+                      src={heroVenomImages[selectedHeroImage].src}
+                      alt={`3D Printed Venom Symbiote Figurine - ${heroVenomImages[selectedHeroImage].label}`}
+                      className="w-full h-80 sm:h-[420px] object-cover object-top hover:scale-105 transition-transform duration-700"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
                   </Link>
-                  <div className="p-6 bg-gradient-to-t from-wood-950 via-wood-950/90 to-transparent text-white absolute bottom-0 inset-x-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[10px] uppercase font-bold tracking-widest text-brand-400 bg-brand-950/80 px-2 py-0.5 rounded">
-                        Featured 3D Kit
+
+                  {/* Interactive Angles Selector */}
+                  <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-slate-900/90 backdrop-blur-md p-1.5 rounded-2xl border border-slate-700/80 shadow-md z-20">
+                    {heroVenomImages.map((img, idx) => (
+                      <button
+                        key={img.label}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setSelectedHeroImage(idx);
+                        }}
+                        className={`px-2.5 py-1 rounded-xl text-[10px] font-bold transition-all ${
+                          selectedHeroImage === idx
+                            ? 'bg-rose-600 text-white shadow-xs'
+                            : 'text-slate-300 hover:text-white hover:bg-slate-800'
+                        }`}
+                      >
+                        {img.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Product Details Overlay */}
+                  <div className="p-6 text-white absolute bottom-0 inset-x-0 z-10 pointer-events-none">
+                    <div className="flex items-center gap-2 mb-1 pointer-events-auto">
+                      <span className="text-[10px] uppercase font-black tracking-widest text-rose-300 bg-rose-950/90 border border-rose-800/80 px-2.5 py-0.5 rounded-full shadow-xs flex items-center gap-1">
+                        <Sparkles className="w-3 h-3 text-rose-400" />
+                        <span>🔥 Featured 3D Masterpiece</span>
                       </span>
                       <Link 
                         to="/shop?category=3D+Printed+Kits"
-                        className="text-[10px] font-bold text-wood-300 hover:text-brand-300 underline"
+                        className="text-[10px] font-bold text-slate-300 hover:text-rose-300 underline"
                       >
-                        Shop 3D Kits →
+                        3D Catalog →
                       </Link>
                     </div>
-                    <h3 className="text-xl font-bold mt-1">KITSaTOz 3D Printed Robotic Arm Frame Kit</h3>
-                    <p className="text-xs text-wood-300 mt-1">Precision sprue frame with slotted arms, servo horn brackets & motion cams.</p>
-                    <div className="flex items-center justify-between mt-3">
-                      <span className="text-lg font-black text-brand-300">₹499</span>
+
+                    <h3 className="text-xl sm:text-2xl font-black mt-1 leading-snug drop-shadow-sm">
+                      3D Printed Venom Symbiote Figurine
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1 line-clamp-2">
+                      Ultra-detailed hand-finished kinetic symbiote sculpt on monolith stone pedestal. Hand-painted & DIY raw print editions.
+                    </p>
+
+                    <div className="flex items-center justify-between mt-3.5 pt-3 border-t border-slate-800/80 pointer-events-auto">
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-xl font-black text-rose-400 font-mono">₹999</span>
+                        <span className="text-xs text-slate-400 line-through">₹1,499</span>
+                        <span className="text-[10px] font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-800 px-1.5 py-0.2 rounded">33% OFF</span>
+                      </div>
                       <Link
-                        to="/product/3d-printed-kitsatoz-robotic-arm-frame"
-                        className="text-xs font-semibold text-white underline hover:text-brand-300"
+                        to="/product/3d-printed-venom-symbiote-figurine"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-soft transition-all transform hover:-translate-y-0.5"
                       >
-                        View Kit Specs →
+                        <span>View Figurine</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
                       </Link>
                     </div>
                   </div>
                 </div>
 
                 {/* Floating micro card */}
-                <div className="hidden sm:flex absolute -bottom-6 -left-6 bg-white/95 backdrop-blur-md p-4 rounded-2xl border border-wood-200 shadow-soft items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
-                    ✓
+                <div className="hidden sm:flex absolute -bottom-6 -left-6 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl border border-wood-200 shadow-soft-lg items-center gap-3 z-20">
+                  <div className="w-10 h-10 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center font-bold">
+                    <Layers className="w-5 h-5 text-rose-600" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-900">Directly Linked to Shop</p>
-                    <p className="text-[11px] text-slate-500">Every kit is ready to assemble</p>
+                    <p className="text-xs font-bold text-slate-900">0.08mm Layer Precision</p>
+                    <p className="text-[11px] text-slate-500">High-Density Resin & Tough PLA+</p>
                   </div>
                 </div>
               </div>

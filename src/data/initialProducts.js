@@ -1,6 +1,44 @@
 export const INITIAL_PRODUCTS = [
   // --- 3D ITEMS & MECHANICAL KITS (New & Requested) ---
   {
+    id: '3d-printed-venom-symbiote-figurine',
+    name: '3D Printed Venom Symbiote Collectible Figurine Statue',
+    category: '3D Printed Kits',
+    categories: ['3D Printed Kits'],
+    price: 999,
+    originalPrice: 1499,
+    rating: 5.0,
+    reviewCount: 48,
+    inStock: true,
+    stockCount: 18,
+    isCustomOption: true,
+    badge: 'Featured Masterpiece',
+    shortDescription: 'Intricately sculpted Venom symbiote perched menacingly on a stone monolith with outstretched talons, muscular anatomy, and signature extended tongue.',
+    fullDescription: 'An awe-inspiring demonstration of advanced 3D fabrication and artisan finishing. This hyper-detailed Venom statue captures the sheer power and terrifying aesthetic of the iconic symbiote, crouched aggressively atop a weathered crag monolith. Features razor-sharp claws, defined musculature, raised chest insignia, vicious fangs, and a flowing crimson-tipped tongue. Offered in full collector hand-painted edition or raw bone-white print ready for hobbyists and painters.',
+    images: [
+      '/products/3d-printed-venom-figurine-front.jpg',
+      '/products/3d-printed-venom-figurine-side.jpg',
+      '/products/3d-printed-venom-figurine-raw.jpg'
+    ],
+    specifications: {
+      'Print Resolution': '0.08mm Ultra-Fine Detail Layer Height',
+      'Material': 'High-Density Tough Resin & PLA+ Composite',
+      'Height': '185mm (Approx 7.3 inches) including stone pedestal',
+      'Base Width': '95mm x 90mm Stable Monolith Base',
+      'Finish Options': 'Full Collector Hand-Painted / Raw DIY Paintable',
+      'Weight': '280 grams'
+    },
+    billOfMaterials: [
+      '1x High-Resolution 3D Printed Venom Figurine Body',
+      '1x Integrated Weathered Stone Display Monolith Base',
+      'Artisan Protective Packaging with Foam Cushioning'
+    ],
+    dimensions: '185mm x 95mm x 90mm',
+    materials: ['High-Density Tough PLA+ & Resin', 'Artisan Hand-Painted Enamel'],
+    colors: ['Collector Hand-Painted (Black, White, Crimson)', 'Raw Bone-White (DIY Paintable)'],
+    assemblyOptions: ['Collector Hand-Painted Edition', 'Raw Unpainted Artisan Print (-₹200)']
+  },
+  {
     id: '3d-printed-kitsatoz-robotic-arm-frame',
     name: 'KITSaTOz 3D Printed Robotic Arm & Linkage Mechanism Frame Kit',
     category: '3D Printed Kits',

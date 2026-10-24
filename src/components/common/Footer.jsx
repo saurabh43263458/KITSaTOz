@@ -9,7 +9,7 @@ export const Footer = () => {
   return (
     <footer className="bg-wood-950 text-wood-200 mt-20 pt-16 pb-12 border-t border-wood-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Value props banner */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-12 mb-12 border-b border-wood-800/80">
           <div className="flex items-center gap-4">
@@ -135,16 +135,16 @@ export const Footer = () => {
             <ul className="space-y-3 text-xs text-wood-300">
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-brand-400 shrink-0 mt-0.5" />
-                <span>Indiranagar Maker Space, Bengaluru, Karnataka 560038</span>
+                <span>Ghaziabad,Uttar Pradesh</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Clock className="w-4 h-4 text-brand-400 shrink-0" />
-                <span>Mon - Sat: 9:30 AM - 7:30 PM IST</span>
+                <span>24*7</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-brand-400 shrink-0" />
                 <a href="mailto:support@kitsatoz.com" className="hover:text-brand-400">
-                  support@kitsatoz.com
+                  kitsatoz@gmail.com
                 </a>
               </li>
             </ul>

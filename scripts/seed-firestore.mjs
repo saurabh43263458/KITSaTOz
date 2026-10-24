@@ -65,6 +65,34 @@ async function saveDocument(collection, docId, data, token) {
 const products = [
   // --- 3D PRINTED SECTION ---
   {
+    id: '3d-printed-venom-symbiote-figurine',
+    slug: '3d-printed-venom-symbiote-figurine',
+    name: '3D Printed Venom Symbiote Collectible Figurine Statue',
+    category: '3D Printed Kits',
+    categories: ['3D Printed Kits'],
+    price: 999,
+    comparePrice: 1499,
+    stock: 18,
+    bestSeller: true,
+    published: true,
+    customizable: true,
+    badge: 'Featured Masterpiece',
+    description: 'Ultra-high detail 3D printed Venom symbiote figurine perched menacingly atop a stone monolith. Features intricate anatomy, extended dripping tongue, razor claws, and spider chest insignia. Available in collector hand-painted or raw DIY paintable edition.',
+    specs: {
+      Material: 'High-Density Tough Resin & PLA+ Composite',
+      Height: '185mm (Approx 7.3 inches) with stone pedestal',
+      Base: '95mm x 90mm Stable Monolith Display Base',
+      Finish: 'Hand-Painted Master Edition / Raw DIY Paintable',
+      Resolution: '0.08mm Ultra-Fine Layer Height'
+    },
+    images: [
+      '/products/3d-printed-venom-figurine-front.jpg',
+      '/products/3d-printed-venom-figurine-side.jpg',
+      '/products/3d-printed-venom-figurine-raw.jpg'
+    ],
+    createdAt: new Date()
+  },
+  {
     id: '3d-printed-kitsatoz-robotic-arm-frame',
     slug: '3d-printed-kitsatoz-robotic-arm-frame',
     name: 'KITSaTOz 3D Printed Robotic Arm & Linkage Mechanism Frame Kit',

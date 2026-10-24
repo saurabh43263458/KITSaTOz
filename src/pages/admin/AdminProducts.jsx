@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { toast } from '../../store/toastStore';
 import { 
   subscribeToProducts, 
@@ -7,6 +7,7 @@ import {
   deleteProductFromFirestore 
 } from '../../services/products';
 import { isFirebaseConfigured } from '../../services/firebase';
+import { compressImageFile, formatBytes } from '../../utils/imageCompressor';
 import { 
   Plus, 
   Edit, 
@@ -19,7 +20,9 @@ import {
   Database,
   RefreshCw,
   Sparkles,
-  Layers
+  Layers,
+  UploadCloud,
+  CheckCircle2
 } from 'lucide-react';
 
 export const AdminProducts = () => {
@@ -29,6 +32,10 @@ export const AdminProducts = () => {
   const [search, setSearch] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [compressing, setCompressing] = useState(false);
+  const [compressionStats, setCompressionStats] = useState(null);
+  const [showManualUrl, setShowManualUrl] = useState(false);
+  const fileInputRef = useRef(null);
 
   // Subscribe to live Firestore products
   useEffect(() => {
@@ -66,6 +73,8 @@ export const AdminProducts = () => {
   const openAddModal = () => {
     setEditingProduct(null);
     setFormData(initialForm);
+    setCompressionStats(null);
+    setShowManualUrl(false);
     setModalOpen(true);
   };
 
@@ -90,7 +99,59 @@ export const AdminProducts = () => {
       colors: Array.isArray(prod.colors) ? prod.colors.join(', ') : '',
       assemblyOptions: Array.isArray(prod.assemblyOptions) ? prod.assemblyOptions.join(', ') : ''
     });
+    setCompressionStats(null);
+    setShowManualUrl(!primaryImg.startsWith('data:'));
     setModalOpen(true);
+  };
+
+  // Image Upload with Automatic Compression & Resizing (<1MB)
+  const handleImageFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Invalid File Type', 'Please upload an image (JPG, PNG, WebP).');
+      return;
+    }
+
+    setCompressing(true);
+    setCompressionStats(null);
+
+    try {
+      // Auto-compress and resize image to guaranteed < 750KB (well below 1MB Firestore document limit)
+      const result = await compressImageFile(file, {
+        maxDimension: 1280,
+        targetMaxBytes: 750 * 1024
+      });
+
+      setFormData((prev) => ({
+        ...prev,
+        imageUrl: result.dataUrl
+      }));
+
+      setCompressionStats({
+        originalSize: result.originalSize,
+        sizeBytes: result.sizeBytes,
+        width: result.width,
+        height: result.height,
+        wasCompressed: result.wasCompressed
+      });
+
+      const savingsPercent = result.originalSize > result.sizeBytes 
+        ? Math.round((1 - result.sizeBytes / result.originalSize) * 100) 
+        : 0;
+
+      toast.success(
+        'Photo Ready for Cloud!',
+        `Resized to ${result.width}x${result.height}px (${formatBytes(result.sizeBytes)}${savingsPercent > 0 ? `, saved ${savingsPercent}%` : ''}). Safely fits inside Firestore document.`
+      );
+    } catch (err) {
+      console.error('Image compression error:', err);
+      toast.error('Compression Failed', err.message || 'Could not process photo.');
+    } finally {
+      setCompressing(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
   };
 
   const handleFormSubmit = async (e) => {
@@ -501,50 +562,171 @@ export const AdminProducts = () => {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-[11px] font-bold text-slate-400 uppercase mb-1">
-                  Image Path / URL *
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    required
-                    value={formData.imageUrl}
-                    onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                    placeholder="/products/image2.jpeg or web URL"
-                    className="flex-1 px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-brand-500"
-                  />
+              {/* Photo Upload with Auto-Resizing & Compression (<1MB) */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="block text-[11px] font-bold text-slate-300 uppercase">
+                    Kit Photo (Auto-Resized &lt; 1MB for Cloud Document) *
+                  </label>
+                  <span className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3" />
+                    Stored in Firestore Doc
+                  </span>
                 </div>
-                <div className="flex items-center gap-2 mt-1.5 overflow-x-auto text-[10px] text-slate-400">
-                  <span>Quick presets:</span>
+
+                {/* Hidden File Input */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={handleImageFileChange}
+                  className="hidden"
+                />
+
+                {/* Upload Area / Live Preview */}
+                {formData.imageUrl ? (
+                  <div className="p-3.5 bg-slate-900 border border-slate-700/80 rounded-2xl flex flex-col sm:flex-row items-center gap-4 shadow-sm">
+                    <div className="w-24 h-24 rounded-xl overflow-hidden border border-slate-700 bg-slate-950 flex-shrink-0 relative group">
+                      <img
+                        src={formData.imageUrl}
+                        alt="Product preview"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    
+                    <div className="flex-1 space-y-1.5 text-center sm:text-left">
+                      <p className="text-xs font-bold text-white flex items-center justify-center sm:justify-start gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>Ready to Store in Firestore Document</span>
+                      </p>
+                      
+                      {compressionStats ? (
+                        <p className="text-[11px] text-slate-400">
+                          Original: <span className="text-slate-300">{formatBytes(compressionStats.originalSize)}</span> ➔ Resized: <span className="font-bold text-emerald-400">{formatBytes(compressionStats.sizeBytes)}</span> ({compressionStats.width}x{compressionStats.height}px)
+                        </p>
+                      ) : (
+                        <p className="text-[11px] text-slate-400 truncate max-w-xs">
+                          {formData.imageUrl.startsWith('data:') ? 'Embedded Base64 Photo (<1MB)' : formData.imageUrl}
+                        </p>
+                      )}
+
+                      <div className="flex items-center justify-center sm:justify-start gap-2 pt-1">
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current?.click()}
+                          disabled={compressing}
+                          className="px-3 py-1 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs shadow-xs transition-colors flex items-center gap-1.5"
+                        >
+                          <UploadCloud className="w-3.5 h-3.5" />
+                          <span>Change Photo</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData({ ...formData, imageUrl: '' });
+                            setCompressionStats(null);
+                          }}
+                          className="px-3 py-1 rounded-lg bg-slate-800 hover:bg-rose-950/50 hover:text-rose-300 text-slate-400 font-semibold text-xs border border-slate-700 transition-colors"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    className="p-6 border-2 border-dashed border-slate-700 hover:border-brand-500 bg-slate-900/60 hover:bg-slate-900 rounded-2xl cursor-pointer transition-colors text-center group"
+                  >
+                    {compressing ? (
+                      <div className="flex flex-col items-center justify-center py-2">
+                        <RefreshCw className="w-8 h-8 text-brand-400 animate-spin mb-2" />
+                        <p className="text-xs font-bold text-white">Compressing & Resizing Photo...</p>
+                        <p className="text-[11px] text-slate-400 mt-0.5">Optimizing under 1MB for Firestore storage</p>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-2">
+                        <div className="w-12 h-12 rounded-2xl bg-brand-950/80 border border-brand-800/60 text-brand-400 flex items-center justify-center mb-2.5 group-hover:scale-110 transition-transform">
+                          <UploadCloud className="w-6 h-6" />
+                        </div>
+                        <p className="text-xs font-bold text-white group-hover:text-brand-300 transition-colors">
+                          Click to Upload Product Photo
+                        </p>
+                        <p className="text-[11px] text-slate-400 mt-1">
+                          PNG, JPG, WebP • Auto-resizes and compresses to &lt; 1MB safely
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Optional manual URL toggle */}
+                <div className="pt-1">
                   <button
                     type="button"
-                    onClick={() => setFormData({ ...formData, imageUrl: '/products/image2.jpeg' })}
-                    className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded"
+                    onClick={() => setShowManualUrl(!showManualUrl)}
+                    className="text-[11px] text-slate-400 hover:text-slate-200 underline font-medium"
                   >
-                    KITSaTOz Frame
+                    {showManualUrl ? 'Hide manual URL / preset options' : 'Or enter image URL / use presets manually'}
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => setFormData({ ...formData, imageUrl: '/products/ganesh_image.jpeg' })}
-                    className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded"
-                  >
-                    Ganesha Idol
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFormData({ ...formData, imageUrl: '/products/spider_3D.jpeg' })}
-                    className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded"
-                  >
-                    Spider Plaque
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFormData({ ...formData, imageUrl: '/products/robot-wheels-set-4.jpg' })}
-                    className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded"
-                  >
-                    Smart Wheels
-                  </button>
+
+                  {showManualUrl && (
+                    <div className="mt-2 space-y-2 p-3 bg-slate-900/80 rounded-xl border border-slate-800">
+                      <input
+                        type="text"
+                        value={formData.imageUrl}
+                        onChange={(e) => {
+                          setFormData({ ...formData, imageUrl: e.target.value });
+                          setCompressionStats(null);
+                        }}
+                        placeholder="/products/image2.jpeg or https://..."
+                        className="w-full px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-brand-500"
+                      />
+                      <div className="flex items-center gap-1.5 flex-wrap text-[10px] text-slate-400">
+                        <span className="font-bold">Presets:</span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData({ ...formData, imageUrl: '/products/3d-printed-venom-figurine-front.jpg' });
+                            setCompressionStats(null);
+                          }}
+                          className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded"
+                        >
+                          Venom Figurine
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData({ ...formData, imageUrl: '/products/image2.jpeg' });
+                            setCompressionStats(null);
+                          }}
+                          className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded"
+                        >
+                          KITSaTOz Frame
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData({ ...formData, imageUrl: '/products/ganesh_image.jpeg' });
+                            setCompressionStats(null);
+                          }}
+                          className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded"
+                        >
+                          Ganesha Idol
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData({ ...formData, imageUrl: '/products/spider_3D.jpeg' });
+                            setCompressionStats(null);
+                          }}
+                          className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded"
+                        >
+                          Spider Plaque
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
