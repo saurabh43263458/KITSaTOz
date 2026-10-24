@@ -154,7 +154,7 @@ export const Footer = () => {
 
         {/* Bottom bar */}
         <div className="pt-8 border-t border-wood-900 flex flex-col sm:flex-row items-center justify-between text-xs text-wood-500 gap-4">
-          <p>© {new Date().getFullYear()} KITSaTOz Inc. All rights reserved. Designed for Makers & Dreamers.</p>
+          <p>© {new Date().getFullYear()} KITSaTOz Inc. All rights reserved. Designed for Makers & Dreamers. By Saurabh Mishra</p>
           <div className="flex gap-6">
             <span className="hover:text-wood-300 cursor-pointer">Privacy Policy</span>
             <span className="hover:text-wood-300 cursor-pointer">Terms of Service</span>

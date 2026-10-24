@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { 
-  ShoppingBag, 
-  Search, 
-  User, 
-  Menu, 
-  X, 
-  LogOut, 
-  ShieldCheck, 
-  Layers, 
+import {
+  ShoppingBag,
+  Search,
+  User,
+  Menu,
+  X,
+  LogOut,
+  ShieldCheck,
+  Layers,
   ChevronDown,
   Hammer
 } from 'lucide-react';
@@ -20,7 +20,7 @@ export const Navbar = () => {
   const location = useLocation();
   const { user, logout } = useAuthStore();
   const { getTotalItems } = useCartStore();
-  
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -51,15 +51,11 @@ export const Navbar = () => {
   return (
     <header className="sticky top-0 z-40 w-full bg-[#FAF7F2]/90 backdrop-blur-md border-b border-wood-200/60 transition-all">
       {/* Top micro announcement bar */}
-      <div className="bg-wood-950 text-wood-200 text-xs py-1.5 px-4 text-center font-medium tracking-wide flex items-center justify-center gap-2">
-        <span>🚀 Free Shipping across India on orders over ₹1,999!</span>
-        <span className="hidden sm:inline opacity-40">|</span>
-        <span className="hidden sm:inline text-brand-300">Fast Handcrafted & 3D Dispatch within 48 Hours</span>
-      </div>
+
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          
+
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
             <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-500 to-wood-800 flex items-center justify-center text-white shadow-soft group-hover:scale-105 transition-transform duration-200">
@@ -83,9 +79,8 @@ export const Navbar = () => {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`text-sm font-medium transition-colors hover:text-brand-600 ${
-                    isActive ? 'text-brand-600 font-semibold' : 'text-slate-700'
-                  }`}
+                  className={`text-sm font-medium transition-colors hover:text-brand-600 ${isActive ? 'text-brand-600 font-semibold' : 'text-slate-700'
+                    }`}
                 >
                   {link.label}
                 </Link>
@@ -95,7 +90,7 @@ export const Navbar = () => {
 
           {/* Actions: Search, Cart, Auth */}
           <div className="flex items-center gap-2 sm:gap-3">
-            
+
             {/* Search Trigger */}
             <div className="relative">
               {searchOpen ? (
@@ -159,7 +154,7 @@ export const Navbar = () => {
                 </button>
 
                 {userDropdownOpen && (
-                  <div 
+                  <div
                     className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-soft-lg border border-slate-100 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150"
                     onMouseLeave={() => setUserDropdownOpen(false)}
                   >
