@@ -23,16 +23,16 @@ export const AdminLayout = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col md:flex-row">
+    <div className="h-screen w-screen overflow-hidden bg-slate-900 text-slate-100 flex flex-col md:flex-row">
       
-      {/* Admin Sidebar */}
-      <aside className="w-full md:w-64 bg-slate-950 border-r border-slate-800 p-6 flex flex-col justify-between shrink-0">
+      {/* Admin Sidebar - Static Non-scrollable */}
+      <aside className="w-full md:w-64 h-auto md:h-screen bg-slate-950 border-r border-slate-800 p-6 flex flex-col justify-between shrink-0 select-none overflow-hidden z-20">
         <div className="space-y-6">
           
           {/* Logo & Admin Badge */}
           <div>
             <Link to="/" className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-brand-600 flex items-center justify-center text-white">
+              <div className="w-9 h-9 rounded-xl bg-brand-600 flex items-center justify-center text-white shadow-soft">
                 <Hammer className="w-5 h-5 -rotate-12" />
               </div>
               <span className="text-xl font-black text-white">
@@ -73,7 +73,7 @@ export const AdminLayout = () => {
         <div className="pt-6 border-t border-slate-800 space-y-3">
           <div className="text-xs text-slate-400">
             <p className="text-[11px] uppercase tracking-wider text-slate-500 font-bold">Admin Operator</p>
-            <p className="font-semibold text-slate-200 truncate">{user?.email}</p>
+            <p className="font-semibold text-slate-200 truncate">{user?.email || 'admin@kitsatoz.com'}</p>
           </div>
 
           <Link
@@ -86,8 +86,8 @@ export const AdminLayout = () => {
 
       </aside>
 
-      {/* Main Content Area */}
-      <main className="flex-1 p-6 md:p-10 overflow-y-auto">
+      {/* Main Content Area - Scrollable */}
+      <main className="flex-1 h-screen overflow-y-auto p-6 md:p-10 scroll-smooth">
         <Outlet />
       </main>
 

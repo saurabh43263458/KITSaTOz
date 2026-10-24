@@ -72,7 +72,7 @@ export const Footer = () => {
 
           {/* Quick links */}
           <div>
-            <h5 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Shop Categories</h5>
+            <h5 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Shop Kits</h5>
             <ul className="space-y-2.5 text-sm">
               <li>
                 <Link to="/shop?category=3D+Printed+Kits" className="text-wood-300 hover:text-brand-400 transition-colors">
@@ -85,13 +85,18 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/shop?category=Robotics+%26+Components" className="text-wood-300 hover:text-brand-400 transition-colors">
+                  Robotics & Components
+                </Link>
+              </li>
+              <li>
                 <Link to="/shop?category=Custom+Prototypes" className="text-wood-300 hover:text-brand-400 transition-colors">
                   Custom Prototyping
                 </Link>
               </li>
               <li>
-                <Link to="/shop" className="text-wood-300 hover:text-brand-400 transition-colors">
-                  All Products
+                <Link to="/shop" className="text-brand-400 font-semibold hover:text-brand-300 transition-colors">
+                  Shop All Kits →
                 </Link>
               </li>
             </ul>

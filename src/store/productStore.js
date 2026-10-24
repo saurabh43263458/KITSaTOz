@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { INITIAL_PRODUCTS } from '../data/initialProducts';
 
-const PRODUCTS_STORAGE_KEY = 'kitsatoz_products_v1';
+const PRODUCTS_STORAGE_KEY = 'kitsatoz_products_v5';
 
 export const useProductStore = create((set, get) => {
   const saved = localStorage.getItem(PRODUCTS_STORAGE_KEY);
@@ -10,19 +10,35 @@ export const useProductStore = create((set, get) => {
     try {
       const parsed = JSON.parse(saved);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        initial = parsed;
+        // Automatically merge new items from INITIAL_PRODUCTS that are not yet in local storage
+        const existingIds = new Set(parsed.map(p => String(p.id)));
+        const newProducts = INITIAL_PRODUCTS.filter(p => !existingIds.has(String(p.id)));
+        // Refresh default items images and categories
+        const updatedParsed = parsed.map(p => {
+          const match = INITIAL_PRODUCTS.find(ip => String(ip.id) === String(p.id));
+          if (match) {
+            return {
+              ...match,
+              ...p,
+              images: match.images,
+              category: match.category
+            };
+          }
+          return p;
+        });
+        initial = [...newProducts, ...updatedParsed];
       }
     } catch (e) {
       console.error('Error parsing stored products', e);
     }
-  } else {
-    localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(INITIAL_PRODUCTS));
   }
+  localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(initial));
 
   const persist = (products) => {
     localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(products));
     set({ products });
   };
+
 
   return {
     products: initial,

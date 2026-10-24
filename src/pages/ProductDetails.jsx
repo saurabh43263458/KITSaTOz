@@ -20,13 +20,16 @@ import {
   Layers
 } from 'lucide-react';
 
+import { getProductBySlug } from '../services/products';
+
 export const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { getProductById } = useProductStore();
   const { addItem } = useCartStore();
 
-  const product = getProductById(id);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedMaterial, setSelectedMaterial] = useState('');
@@ -35,16 +38,49 @@ export const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('specs'); // 'specs' | 'bom' | 'shipping'
 
+  useEffect(() => {
+    let isMounted = true;
+    const fetchProduct = async () => {
+      setLoading(true);
+      try {
+        const firestoreProduct = await getProductBySlug(id);
+        if (isMounted) {
+          if (firestoreProduct) {
+            setProduct(firestoreProduct);
+          } else {
+            setProduct(getProductById(id));
+          }
+        }
+      } catch (e) {
+        if (isMounted) setProduct(getProductById(id));
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+    fetchProduct();
+    return () => { isMounted = false; };
+  }, [id, getProductById]);
+
   // Initialize selected options when product loads
   useEffect(() => {
     if (product) {
       if (product.materials?.length) setSelectedMaterial(product.materials[0]);
+      else if (product.specs?.Material) setSelectedMaterial(product.specs.Material);
       if (product.colors?.length) setSelectedColor(product.colors[0]);
       if (product.assemblyOptions?.length) setSelectedAssembly(product.assemblyOptions[0]);
       setSelectedImage(0);
       setQuantity(1);
     }
   }, [product]);
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-20 text-center">
+        <div className="w-10 h-10 border-4 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-sm font-semibold text-slate-600">Loading Kit Details...</p>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -61,50 +97,77 @@ export const ProductDetails = () => {
     );
   }
 
+  const currentStock = product.stock !== undefined ? Number(product.stock) : (product.stockCount !== undefined ? Number(product.stockCount) : 10);
+  const isOutOfStock = currentStock <= 0;
+  const isLowStock = currentStock > 0 && currentStock <= 5;
+
+
+  const handleImageError = (e) => {
+    const src = e.target.src || '';
+    if (src.includes('products%2F')) {
+      const match = src.match(/products%2F([^?]+)/);
+      if (match && match[1]) {
+        e.target.src = '/products/' + decodeURIComponent(match[1]);
+        return;
+      }
+    }
+    e.target.src = '/products/robot-wheels-set-4.jpg';
+  };
+
   const handleAddToCart = () => {
-    if (!product.inStock) {
-      toast.error('Out of Stock', 'This item cannot be ordered at this time.');
+    if (isOutOfStock) {
+      toast.error('Out of Stock', 'This item is currently out of stock.');
       return;
     }
 
-    addItem(product, {
+    addItem({
+      ...product,
+      inStock: !isOutOfStock,
+      stockCount: currentStock
+    }, {
       quantity,
-      selectedMaterial,
-      selectedColor,
-      selectedAssembly
+      selectedMaterial: selectedMaterial || product.specs?.Material || 'Standard',
+      selectedColor: selectedColor || 'Standard',
+      selectedAssembly: selectedAssembly || 'Standard'
     });
 
     toast.success('Added to Cart', `${product.name} (Qty: ${quantity}) has been added.`);
   };
 
   const handleBuyNow = () => {
-    if (!product.inStock) {
-      toast.error('Out of Stock', 'This item cannot be ordered at this time.');
+    if (isOutOfStock) {
+      toast.error('Out of Stock', 'This item is currently out of stock.');
       return;
     }
 
-    addItem(product, {
+    addItem({
+      ...product,
+      inStock: !isOutOfStock,
+      stockCount: currentStock
+    }, {
       quantity,
-      selectedMaterial,
-      selectedColor,
-      selectedAssembly
+      selectedMaterial: selectedMaterial || product.specs?.Material || 'Standard',
+      selectedColor: selectedColor || 'Standard',
+      selectedAssembly: selectedAssembly || 'Standard'
     });
 
-    // Directly proceed to checkout
     navigate('/checkout');
   };
 
   const whatsAppUrl = generateWhatsAppInquiryUrl(
     product, 
-    `Selected: Material: ${selectedMaterial}, Color: ${selectedColor}, Option: ${selectedAssembly}`
+    `Selected: Material: ${selectedMaterial || 'Standard'}, Option: ${selectedAssembly || 'Standard'}`
   );
+
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-xs text-slate-500 mb-6">
+      <nav className="flex items-center gap-2 text-xs text-slate-500 mb-6 flex-wrap">
         <Link to="/" className="hover:text-brand-600">Home</Link>
+        <span>/</span>
+        <Link to="/shop" className="hover:text-brand-600 font-medium">Shop Kits</Link>
         <span>/</span>
         <Link to={`/shop?category=${encodeURIComponent(product.category)}`} className="hover:text-brand-600">
           {product.category}
@@ -120,8 +183,9 @@ export const ProductDetails = () => {
         <div className="lg:col-span-6 space-y-4">
           <div className="aspect-square rounded-3xl overflow-hidden border border-wood-200 bg-white shadow-xs">
             <img
-              src={product.images?.[selectedImage] || product.images?.[0]}
+              src={product.images?.[selectedImage] || product.images?.[0] || '/products/robot-wheels-set-4.jpg'}
               alt={product.name}
+              onError={handleImageError}
               className="w-full h-full object-cover object-center transition-all duration-300"
             />
           </div>
@@ -139,7 +203,12 @@ export const ProductDetails = () => {
                       : 'border-wood-200 hover:border-wood-400 opacity-70 hover:opacity-100'
                   }`}
                 >
-                  <img src={img} alt={`${product.name} ${index + 1}`} className="w-full h-full object-cover" />
+                  <img
+                    src={img}
+                    alt={`${product.name} ${index + 1}`}
+                    onError={handleImageError}
+                    className="w-full h-full object-cover"
+                  />
                 </button>
               ))}
             </div>
@@ -162,15 +231,19 @@ export const ProductDetails = () => {
         <div className="lg:col-span-6 space-y-6">
           
           <div>
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-2 flex-wrap">
               <Badge variant="brand">{product.category}</Badge>
-              {product.badge && <Badge variant="wood">{product.badge}</Badge>}
-              {product.inStock ? (
-                <Badge variant="success">In Stock ({product.stockCount} available)</Badge>
+              {product.bestSeller && <Badge variant="brand">Best Seller</Badge>}
+              {product.badge && !product.bestSeller && <Badge variant="wood">{product.badge}</Badge>}
+              {isOutOfStock ? (
+                <Badge variant="danger">Out of Stock</Badge>
+              ) : isLowStock ? (
+                <Badge variant="warning">Low Stock ({currentStock} left)</Badge>
               ) : (
-                <Badge variant="danger">Backorder</Badge>
+                <Badge variant="success">In Stock ({currentStock} available)</Badge>
               )}
             </div>
+
 
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight">
               {product.name}
@@ -320,20 +393,28 @@ export const ProductDetails = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
                   onClick={handleAddToCart}
-                  disabled={!product.inStock}
-                  className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-wood-100 hover:bg-wood-200 text-slate-800 font-bold text-sm border border-wood-300 transition-colors shadow-xs"
+                  disabled={isOutOfStock}
+                  className={`w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-bold text-sm border transition-colors shadow-xs ${
+                    !isOutOfStock
+                      ? 'bg-wood-100 hover:bg-wood-200 text-slate-800 border-wood-300'
+                      : 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed opacity-60'
+                  }`}
                 >
                   <ShoppingBag className="w-4 h-4 text-wood-800" />
-                  <span>Add to Cart</span>
+                  <span>{isOutOfStock ? 'Sold Out' : 'Add to Cart'}</span>
                 </button>
 
                 <button
                   onClick={handleBuyNow}
-                  disabled={!product.inStock}
-                  className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-soft transition-all transform hover:-translate-y-0.5"
+                  disabled={isOutOfStock}
+                  className={`w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-bold text-sm shadow-soft transition-all ${
+                    !isOutOfStock
+                      ? 'bg-brand-600 hover:bg-brand-700 text-white transform hover:-translate-y-0.5'
+                      : 'bg-slate-300 text-slate-500 cursor-not-allowed opacity-60'
+                  }`}
                 >
                   <Zap className="w-4 h-4" />
-                  <span>Buy Now</span>
+                  <span>{isOutOfStock ? 'Unavailable' : 'Buy Now'}</span>
                 </button>
               </div>
 
@@ -389,8 +470,8 @@ export const ProductDetails = () => {
             <div className="py-4 text-xs text-slate-600 leading-relaxed">
               {activeTab === 'specs' && (
                 <div className="space-y-2">
-                  {product.specifications ? (
-                    Object.entries(product.specifications).map(([key, val]) => (
+                  {(product.specs || product.specifications) ? (
+                    Object.entries(product.specs || product.specifications).map(([key, val]) => (
                       <div key={key} className="flex justify-between py-1.5 border-b border-wood-100">
                         <span className="font-semibold text-slate-700">{key}:</span>
                         <span className="text-slate-900">{val}</span>
@@ -428,6 +509,32 @@ export const ProductDetails = () => {
 
         </div>
 
+      </div>
+
+      {/* Discover More Kits Banner */}
+      <div className="mt-16 pt-8 border-t border-wood-200">
+        <div className="bg-wood-50 rounded-3xl p-6 sm:p-8 border border-wood-200/80 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div>
+            <h3 className="text-lg font-bold text-slate-900">Discover More Maker Kits</h3>
+            <p className="text-xs text-slate-600 mt-1">
+              Explore our full collection of 3D-printed bionic spiders, kinetic automata, robotic wheel sets, and laser-cut wooden projects.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <Link
+              to="/shop"
+              className="px-5 py-2.5 rounded-full bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs shadow-soft transition-colors"
+            >
+              Browse All Shop Kits →
+            </Link>
+            <Link
+              to={`/shop?category=${encodeURIComponent(product.category)}`}
+              className="px-5 py-2.5 rounded-full bg-white hover:bg-wood-100 border border-wood-300 text-slate-800 font-semibold text-xs shadow-xs transition-colors"
+            >
+              More in {product.category}
+            </Link>
+          </div>
+        </div>
       </div>
 
     </div>

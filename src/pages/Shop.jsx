@@ -1,13 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useProductStore } from '../store/productStore';
+import { useProducts } from '../hooks/useProducts';
 import { ProductCard } from '../components/product/ProductCard';
 import { CATEGORIES } from '../data/initialProducts';
-import { Search, SlidersHorizontal, RotateCcw, Box, Check, Sparkles } from 'lucide-react';
+import { Search, SlidersHorizontal, RotateCcw, Box, Check, Sparkles, AlertCircle } from 'lucide-react';
 
 export const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { products } = useProductStore();
+  const { products, loading, error, refetch } = useProducts();
 
   const initialCategory = searchParams.get('category') || 'All';
   const initialSearch = searchParams.get('q') || '';
@@ -52,39 +52,45 @@ export const Shop = () => {
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
       // Category match
-      if (selectedCategory !== 'All' && product.category !== selectedCategory) {
-        return false;
+      if (selectedCategory !== 'All') {
+        const matchesMainCategory = product.category === selectedCategory;
+        const matchesSubCategories = Array.isArray(product.categories) && product.categories.includes(selectedCategory);
+        if (!matchesMainCategory && !matchesSubCategories) {
+          return false;
+        }
       }
       // Search match
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase();
-        const matchesName = product.name.toLowerCase().includes(query);
-        const matchesDesc = product.shortDescription.toLowerCase().includes(query);
-        const matchesCategory = product.category.toLowerCase().includes(query);
-        if (!matchesName && !matchesDesc && !matchesCategory) return false;
+        const nameMatch = (product.name || '').toLowerCase().includes(query);
+        const descMatch = (product.description || product.shortDescription || '').toLowerCase().includes(query);
+        const catMatch = (product.category || '').toLowerCase().includes(query);
+        if (!nameMatch && !descMatch && !catMatch) return false;
       }
-      // Max Price
-      if (product.price > maxPrice) {
+      // Price limit
+      if (Number(product.price || 0) > maxPrice) {
         return false;
       }
-      // Stock
-      if (onlyInStock && !product.inStock) {
-        return false;
+      // In stock filter
+      if (onlyInStock) {
+        const stock = product.stock !== undefined ? product.stock : product.stockCount;
+        if (Number(stock || 0) <= 0) return false;
       }
       // Customizable
-      if (onlyCustomizable && !product.isCustomOption) {
+      if (onlyCustomizable && !product.customizable && !product.isCustomOption) {
         return false;
       }
       return true;
     }).sort((a, b) => {
-      if (sortBy === 'price-low') return a.price - b.price;
-      if (sortBy === 'price-high') return b.price - a.price;
+      if (sortBy === 'price-low') return (a.price || 0) - (b.price || 0);
+      if (sortBy === 'price-high') return (b.price || 0) - (a.price || 0);
       if (sortBy === 'rating') return (b.rating || 0) - (a.rating || 0);
-      return 0; // 'featured' retains natural sequence
+      return 0;
     });
-  }, [products, selectedCategory, searchQuery, maxPrice, sortBy, onlyInStock, onlyCustomizable]);
+  }, [products, selectedCategory, searchQuery, maxPrice, onlyInStock, onlyCustomizable, sortBy]);
 
   return (
+
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       
       {/* Page Title & Breadcrumb */}
@@ -197,15 +203,15 @@ export const Shop = () => {
               </div>
               <input
                 type="range"
-                min="1500"
+                min="100"
                 max="7000"
-                step="250"
+                step="50"
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(Number(e.target.value))}
                 className="w-full accent-brand-600 cursor-pointer"
               />
               <div className="flex justify-between text-[10px] text-slate-400 mt-1 font-semibold">
-                <span>₹1,500</span>
+                <span>₹100</span>
                 <span>₹7,000</span>
               </div>
             </div>
@@ -242,7 +248,7 @@ export const Shop = () => {
           {/* Top Sort / Counter Bar */}
           <div className="bg-white rounded-2xl border border-wood-200/80 px-5 py-3.5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <span className="text-xs font-semibold text-slate-600">
-              Showing <strong className="text-slate-900">{filteredProducts.length}</strong> kits found
+              Showing <strong className="text-slate-900">{filteredProducts.length}</strong> {filteredProducts.length === 1 ? 'kit' : 'kits'} found
             </span>
 
             <div className="flex items-center gap-2 self-end sm:self-auto">
@@ -260,8 +266,37 @@ export const Shop = () => {
             </div>
           </div>
 
-          {/* Product Cards */}
-          {filteredProducts.length > 0 ? (
+          {/* Loading Skeletons */}
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map((idx) => (
+                <div key={idx} className="bg-white rounded-2xl border border-wood-200/80 p-4 animate-pulse space-y-4">
+                  <div className="aspect-square bg-slate-200 rounded-xl w-full"></div>
+                  <div className="space-y-2">
+                    <div className="h-4 bg-slate-200 rounded w-3/4"></div>
+                    <div className="h-3 bg-slate-100 rounded w-full"></div>
+                    <div className="h-3 bg-slate-100 rounded w-2/3"></div>
+                  </div>
+                  <div className="flex items-center justify-between pt-2">
+                    <div className="h-5 bg-slate-200 rounded w-1/3"></div>
+                    <div className="h-8 bg-slate-200 rounded-xl w-16"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : error ? (
+            <div className="bg-rose-50 border border-rose-200 rounded-3xl p-10 text-center shadow-xs">
+              <AlertCircle className="w-10 h-10 text-rose-500 mx-auto mb-3" />
+              <h3 className="text-base font-bold text-rose-800 mb-1">Unable to Load Products</h3>
+              <p className="text-xs text-rose-600 max-w-md mx-auto mb-4">{error}</p>
+              <button
+                onClick={() => refetch()}
+                className="py-2 px-5 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs shadow-xs transition-colors"
+              >
+                Try Again
+              </button>
+            </div>
+          ) : filteredProducts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
@@ -284,6 +319,7 @@ export const Shop = () => {
               </button>
             </div>
           )}
+
 
         </div>
 

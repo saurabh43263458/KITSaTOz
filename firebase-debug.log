@@ -1,0 +1,34 @@
+[debug] [2026-10-23T15:51:09.966Z] ----------------------------------------------------------------------
+[debug] [2026-10-23T15:51:09.973Z] Command:       C:\nvm4w\nodejs\node.exe C:\nvm4w\nodejs\node_modules\firebase-tools\lib\bin\firebase.js projects:list
+[debug] [2026-10-23T15:51:09.974Z] CLI Version:   15.34.1
+[debug] [2026-10-23T15:51:09.974Z] Platform:      win32
+[debug] [2026-10-23T15:51:09.974Z] Node Version:  v22.22.3
+[debug] [2026-10-23T15:51:09.975Z] Detected Agent: antigravity
+[debug] [2026-10-23T15:51:09.975Z] Time:          Fri Oct 23 2026 21:21:09 GMT+0530 (India Standard Time)
+[debug] [2026-10-23T15:51:09.975Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-10-23T15:51:10.532Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-23T15:51:10.533Z] > authorizing via signed-in user (sm427878@gmail.com)
+[debug] [2026-10-23T15:51:10.560Z] Checked if tokens are valid: true, expires at: 1792773457337
+[debug] [2026-10-23T15:51:10.560Z] Checked if tokens are valid: true, expires at: 1792773457337
+[debug] [2026-10-23T15:51:10.563Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2026-10-23T15:51:11.308Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2026-10-23T15:51:11.308Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[info] ┌──────────────────────┬──────────────────────────┬────────────────┬──────────────────────┐
+│ Project Display Name │ Project ID               │ Project Number │ Resource Location ID │
+├──────────────────────┼──────────────────────────┼────────────────┼──────────────────────┤
+│ Flutter              │ flutter-44d5d            │ 1077366046116  │ [Not specified]      │
+├──────────────────────┼──────────────────────────┼────────────────┼──────────────────────┤
+│ KITSaTOz             │ kitsatoz-8becc (current) │ 142802893375   │ [Not specified]      │
+└──────────────────────┴──────────────────────────┴────────────────┴──────────────────────┘
+[info] 
+[info] 2 project(s) total.
+[debug] [2026-10-23T15:51:11.375Z] Error: EBUSY: resource busy or locked, unlink 'C:\Users\sm427\OneDrive\Desktop\coding\Customer\firebase-debug.log'
+    at Object.unlinkSync (node:fs:1948:11)
+    at process.<anonymous> (C:\Users\sm427\AppData\Local\nvm\v22.22.3\node_modules\firebase-tools\lib\bin\cli.js:74:16)
+    at process.emit (node:events:531:35)
+    at process.exit (node:internal/process/per_thread:240:15)
+    at C:\Users\sm427\AppData\Local\nvm\v22.22.3\node_modules\firebase-tools\lib\command.js:131:25
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[error] 
+[error] Error: An unexpected error has occurred.

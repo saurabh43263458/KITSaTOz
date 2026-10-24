@@ -46,16 +46,6 @@ export const Login = () => {
     }
   };
 
-  const fillQuickDemo = (role) => {
-    if (role === 'admin') {
-      setEmail('admin@kitsatoz.com');
-      setPassword('admin123456');
-    } else {
-      setEmail('maker.tester@example.com');
-      setPassword('maker123456');
-    }
-  };
-
   return (
     <div className="min-h-[75vh] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md bg-white rounded-3xl border border-wood-200/80 p-8 shadow-soft-lg">
@@ -82,27 +72,6 @@ export const Login = () => {
             {errorMessage}
           </div>
         )}
-
-        {/* Quick Demo Credentials Helpers */}
-        <div className="mb-6 p-3 bg-wood-50 rounded-2xl border border-wood-200/70 text-xs">
-          <p className="font-bold text-slate-700 mb-1.5">⚡ Fast 1-Click Demo Login:</p>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => fillQuickDemo('customer')}
-              className="flex-1 py-1.5 px-2 bg-white hover:bg-wood-100 border border-wood-300 rounded-lg font-semibold text-slate-700 text-[11px]"
-            >
-              Demo Customer
-            </button>
-            <button
-              type="button"
-              onClick={() => fillQuickDemo('admin')}
-              className="flex-1 py-1.5 px-2 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-lg font-semibold text-purple-700 text-[11px]"
-            >
-              🛡️ Demo Admin
-            </button>
-          </div>
-        </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">

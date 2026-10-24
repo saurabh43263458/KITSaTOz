@@ -42,6 +42,7 @@ export const Navbar = () => {
     { label: 'Shop Kits', path: '/shop' },
     { label: '3D Printed', path: '/shop?category=3D+Printed+Kits' },
     { label: 'Wooden DIY', path: '/shop?category=Wooden+DIY+Kits' },
+    { label: 'Robotics & Parts', path: '/shop?category=Robotics+%26+Components' },
     { label: 'Custom Prototyping', path: '/shop?category=Custom+Prototypes' },
     { label: 'About', path: '/about' },
     { label: 'Contact', path: '/contact' }
@@ -75,8 +76,8 @@ export const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-7">
-            {navLinks.slice(0, 5).map((link) => {
+          <nav className="hidden lg:flex items-center gap-6">
+            {navLinks.slice(0, 6).map((link) => {
               const isActive = location.pathname + location.search === link.path;
               return (
                 <Link

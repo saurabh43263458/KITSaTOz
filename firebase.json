@@ -1,0 +1,14 @@
+{
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "auth": {
+    "providers": {
+      "emailPassword": true,
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "KITSaTOz",
+        "supportEmail": "sm427878@gmail.com"
+      }
+    }
+  }
+}

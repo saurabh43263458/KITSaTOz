@@ -4,7 +4,7 @@
  */
 
 export const sendOrderEmailNotification = async (order) => {
-  const adminEmail = import.meta.env.VITE_ADMIN_EMAIL || 'admin@kitsatoz.com';
+  const primaryAdminEmail = (import.meta.env.VITE_ADMIN_EMAIL || 'sm427878@gmail.com').split(',')[0].trim();
   const web3FormsAccessKey = import.meta.env.VITE_WEB3FORMS_KEY;
 
   const emailPayload = {
@@ -14,9 +14,9 @@ export const sendOrderEmailNotification = async (order) => {
     email: order.email,
     address: `${order.address}, PIN: ${order.pincode}`,
     notes: order.customizationNotes || 'None',
-    totalAmount: `₹${order.totalAmount.toLocaleString()}`,
-    itemsSummary: order.items
-      .map(i => `${i.name} (Qty: ${i.quantity}, Price: ₹${i.price})`)
+    totalAmount: `₹${(order.totalAmount || order.total || 0).toLocaleString()}`,
+    itemsSummary: (order.items || [])
+      .map(i => `${i.name} (Qty: ${i.quantity || i.qty || 1}, Price: ₹${i.price})`)
       .join(', ')
   };
 
@@ -32,7 +32,7 @@ export const sendOrderEmailNotification = async (order) => {
         body: JSON.stringify({
           access_key: web3FormsAccessKey,
           from_name: 'KITSaTOz Store',
-          to_email: adminEmail,
+          to_email: primaryAdminEmail,
           ...emailPayload
         })
       });
@@ -44,6 +44,7 @@ export const sendOrderEmailNotification = async (order) => {
   }
 
   // Graceful local simulation / logging
-  console.log(`%c[KITSaTOz Email Service] Email dispatched to ${adminEmail}:`, 'color: #ea580c; font-weight: bold;', emailPayload);
+  console.log(`%c[KITSaTOz Email Service] Email dispatched to ${primaryAdminEmail}:`, 'color: #ea580c; font-weight: bold;', emailPayload);
+
   return { success: true, simulated: true };
 };

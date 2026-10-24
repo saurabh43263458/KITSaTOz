@@ -20,7 +20,7 @@ import {
 import { Link } from 'react-router-dom';
 
 export const Profile = () => {
-  const { user, updateUserProfile, toggleAdminRole } = useAuthStore();
+  const { user, updateUserProfile } = useAuthStore();
   const { getOrdersByUser } = useOrderStore();
 
   const userOrders = getOrdersByUser(user?.email);
@@ -68,17 +68,25 @@ export const Profile = () => {
           </p>
         </div>
 
-        {/* Demo Admin Toggle helper */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => {
-              toggleAdminRole();
-              toast.info('Role Toggled', `Current role: ${user?.role === 'admin' ? 'Customer' : 'Admin'}`);
-            }}
-            className="text-xs py-2 px-3.5 rounded-full border border-purple-200 bg-purple-50 text-purple-700 font-semibold hover:bg-purple-100 transition-colors"
-          >
-            {user?.role === 'admin' ? '🛡️ Admin Active (Click to switch Customer)' : 'Switch to Admin Role'}
-          </button>
+        {/* User Role Badge & Admin Link */}
+        <div className="flex items-center gap-3">
+          {user?.role === 'admin' ? (
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-purple-100 text-purple-800 border border-purple-200">
+                <ShieldCheck className="w-4 h-4" /> Store Admin
+              </span>
+              <Link
+                to="/admin"
+                className="text-xs py-1.5 px-3.5 rounded-full bg-brand-600 hover:bg-brand-700 text-white font-semibold transition-colors shadow-xs"
+              >
+                Go to Admin Panel &rarr;
+              </Link>
+            </div>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <Check className="w-3.5 h-3.5" /> Customer Account
+            </span>
+          )}
         </div>
       </div>
 

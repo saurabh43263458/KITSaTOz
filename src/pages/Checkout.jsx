@@ -9,6 +9,7 @@ import { useOrderStore } from '../store/orderStore';
 import { toast } from '../store/toastStore';
 import { sendOrderEmailNotification } from '../services/emailService';
 import { generateWhatsAppOrderUrl } from '../services/whatsappService';
+import { createOrder } from '../services/orders';
 import { 
   ShieldCheck, 
   Truck, 
@@ -102,8 +103,16 @@ export const Checkout = () => {
         userUid: user?.uid || null
       };
 
-      // 2. Persist order in store (and database)
-      const createdOrder = addOrder(orderData);
+      // 2. Persist order in Firebase Firestore and local store
+      let createdOrder = addOrder(orderData);
+      try {
+        const firestoreOrder = await createOrder({ ...orderData, id: createdOrder.id });
+        if (firestoreOrder) {
+          createdOrder = firestoreOrder;
+        }
+      } catch (e) {
+        console.warn('Could not save order directly to Firestore:', e);
+      }
 
       // Save user profile details for next time
       updateUserProfile({

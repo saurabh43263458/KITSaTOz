@@ -1,4 +1,498 @@
 export const INITIAL_PRODUCTS = [
+  // --- 3D ITEMS & MECHANICAL KITS (New & Requested) ---
+  {
+    id: '3d-printed-kitsatoz-robotic-arm-frame',
+    name: 'KITSaTOz 3D Printed Robotic Arm & Linkage Mechanism Frame Kit',
+    category: '3D Printed Kits',
+    categories: ['3D Printed Kits', 'Robotics & Components'],
+    price: 499,
+    originalPrice: 699,
+    rating: 5.0,
+    reviewCount: 32,
+    inStock: true,
+    stockCount: 25,
+    isCustomOption: true,
+    badge: 'KITSaTOz Original',
+    shortDescription: 'Official KITSaTOz precision 3D-printed modular robotic arm frame with snap-break sprue runners, linkages, and servo horns.',
+    fullDescription: 'Designed and manufactured exclusively by KITSaTOz. This precision 3D-printed sprue frame kit contains all essential kinetic components for building multi-axis robotic arms, pan-tilt heads, and mechanical linkages. Includes 2 slotted slider arms, dual servo horn brackets with pivot points, 2 eccentric rotary disc cams, and 2 U-bracket joint mounts. Perfect for STEM robotics projects, servo testing, and custom mechanics.',
+    images: [
+      '/products/image2.jpeg',
+      '/products/image_1.jpeg'
+    ],
+    specifications: {
+      'Material': 'High-Toughness Matte White PLA+',
+      'Components Included': '2x Slotted Linkage Bars, 2x Servo Horns, 2x Disc Cams, 2x U-Brackets',
+      'Compatibility': 'Standard Micro Servos (SG90 / MG90S) & TT BO Motors',
+      'Dimensions': '165mm x 155mm x 22mm',
+      'Mounting Holes': 'Standard M3 Precision Tolerances',
+      'Assembly': 'Snap-off Sprue Runners with Pivot Bushings'
+    },
+    billOfMaterials: [
+      '1x KITSaTOz Multi-Part 3D Sprue Runner Frame',
+      '2x Slotted Articulation Slider Arms',
+      '2x Servo Bracket Arms with Pivot Mounts',
+      '2x Rotary Eccentric Motion Cams',
+      '2x Orthogonal U-Joint Pivot Brackets'
+    ],
+    dimensions: '165mm x 155mm x 22mm',
+    materials: ['High-Toughness PLA+ White', 'Tough Carbon PETG'],
+    colors: ['Clean Signal White', 'Tactical Matte Black'],
+    assemblyOptions: ['Sprue Frame Kit (DIY Cut & Assemble)', 'De-sprued & Pre-fitted Joint Set (+₹100)']
+  },
+  {
+    id: '3d-printed-spider-emblem-wall-art',
+    name: '3D Printed Spider Emblem Silhouette Wall Art Plaque',
+    category: '3D Printed Kits',
+    categories: ['3D Printed Kits'],
+    price: 349,
+    originalPrice: 499,
+    rating: 4.9,
+    reviewCount: 41,
+    inStock: true,
+    stockCount: 30,
+    isCustomOption: true,
+    badge: '3D Wall Art',
+    shortDescription: 'Iconic arachnid superhero insignia crafted through precision multi-layer 3D printing with raised relief.',
+    fullDescription: 'Show off your fandom with this precision-crafted Spider emblem wall plaque. Designed with high-contrast dual-tone depth, the aggressive geometric arachnid silhouette sits proud against a clean satin backplate. Includes rear mounting groove and desk stand bracket for displaying in gaming rooms, offices, and maker spaces.',
+    images: [
+      '/products/spider_3D.jpeg'
+    ],
+    specifications: {
+      'Material': 'Dual-Layer Matte PLA+',
+      'Dimensions': '160mm x 160mm x 10mm',
+      'Mounting': 'Wall Hanger Slot & Desk Stand Groove',
+      'Finish': 'Textured Satin Base with Precision Silhouette',
+      'Print Resolution': '0.12mm Ultra-Fine Detail'
+    },
+    billOfMaterials: [
+      '1x High-Resolution 3D Printed Spider Insignia Plaque',
+      '1x Low-Profile Desk Display Stand',
+      '3M Command Mounting Strip Set'
+    ],
+    dimensions: '160mm x 160mm x 10mm',
+    materials: ['Matte PLA+ Composite', 'Wood-Fiber Infused PLA'],
+    colors: ['Shadow Grey on White', 'Metallic Crimson on Matte Black', 'Wood Grain Aesthetic'],
+    assemblyOptions: ['Wall Art Plaque (Ready to Hang)', 'Plaque + LED Backlight Kit (+₹150)']
+  },
+  {
+    id: 'wooden-mechanical-walking-spider',
+    name: 'Wooden Mechanical Walking Spider Automaton Kit',
+    category: 'Wooden DIY Kits',
+    price: 699,
+    originalPrice: 899,
+    rating: 4.9,
+    reviewCount: 38,
+    inStock: true,
+    stockCount: 22,
+    isCustomOption: false,
+    badge: 'Best Seller',
+    shortDescription: 'Laser-cut wooden motorized spider with crank-linkage legs that authentically crawls across surfaces.',
+    fullDescription: 'Watch kinematic mechanics come alive! Assemble precision-cut birch plywood link bars, connect the geared DC motor, and watch this multi-legged spider scuttle smoothly across tables using authentic mechanical linkage geometry. Fun and educational STEM kit for all ages.',
+    images: [
+      '/products/spider_wood.jpeg',
+      '/products/spider_wood2.jpeg'
+    ],
+    specifications: {
+      'Wood Material': 'Laser-Cut 3mm Baltic Birch Plywood',
+      'Drive Mechanism': 'Electric Reduction Gearbox Motor',
+      'Power Source': '2x AA Battery Holder with Integrated Switch',
+      'Dimensions': '170mm x 150mm x 90mm',
+      'Difficulty': 'Beginner Friendly (Level 2/5)'
+    },
+    billOfMaterials: [
+      'Precision Laser-Cut Spider Frame Plates & Articulated Legs',
+      'DC Micro Electric Gearbox Motor',
+      'Battery Case & Integrated Slide Switch',
+      'Steel Drive Shafts, Spacers & Brass Screws',
+      'Step-by-Step Pictorial Assembly Blueprint'
+    ],
+    dimensions: '170mm x 150mm x 90mm',
+    materials: ['Baltic Birch Plywood', 'Micro Electric Drive'],
+    colors: ['Natural Birch Wood', 'Dark Teak Wood Stain'],
+    assemblyOptions: ['DIY Kit (Assembly Required)', 'Pre-Assembled & Tested (+₹150)']
+  },
+  {
+    id: '3d-printed-high-traction-robot-wheels',
+    name: '3D Printed High-Traction Robotic Wheels & Rims (Set of 4)',
+    category: '3D Printed Kits',
+    price: 349,
+    originalPrice: 499,
+    rating: 4.9,
+    reviewCount: 54,
+    inStock: true,
+    stockCount: 35,
+    isCustomOption: true,
+    badge: '3D Maker Choice',
+    shortDescription: 'Custom 3D-printed lightweight high-grip robotic wheels with radial tread geometry and TT motor shaft bore.',
+    fullDescription: 'Engineered for robotic rovers and obstacle racers. Features parametric lightweight lattice spokes, dual-flat D-shaft bore matching standard TT BO motors, and high-traction ribbed tread profile for superior torque transfer without slip on wood, tile, and carpet.',
+    images: [
+      '/products/weel.jpeg',
+      '/products/robot-wheels-set-4.jpg'
+    ],
+    specifications: {
+      'Diameter': '68mm',
+      'Tread Width': '28mm',
+      'Shaft Bore': 'TT Motor Dual-Flat (D-Type) 5.4mm',
+      'Hub Architecture': '5-Spoke Lightweight Kinetic Lattice',
+      'Tread Material': 'High-Traction Ribbed Profile'
+    },
+    billOfMaterials: [
+      '4x 3D-Printed High-Traction Wheels with Spoked Hubs',
+      '4x High-Grip Outer Traction Bands'
+    ],
+    dimensions: '68mm x 68mm x 28mm each',
+    materials: ['Tough PLA+ Core', 'Flexible High-Grip Rim'],
+    colors: ['Racing Yellow & Black', 'Matte Stealth Black', 'Vibrant Orange & White'],
+    assemblyOptions: ['Set of 4 Wheels (Ready to Mount)', 'Wheel Set + 2x TT Motors Combo (+₹180)']
+  },
+  {
+    id: '3d-printed-lord-ganesha-figurine',
+    name: '3D Printed Lord Ganesha Divine Meditative Figurine',
+    category: '3D Printed Kits',
+    price: 799,
+    originalPrice: 1099,
+    rating: 5.0,
+    reviewCount: 62,
+    inStock: true,
+    stockCount: 20,
+    isCustomOption: false,
+    badge: 'Spiritual Artisan',
+    shortDescription: 'Intricately textured 3D-printed Lord Ganesha idol with ornate jewelry relief and stone-finish aesthetics.',
+    fullDescription: 'Celebrate Indian heritage through cutting-edge additive artistry. This high-density meditative Ganesha idol features microscopic detail on the trunk, mukut (crown), and modak, printed in eco-friendly mineral-filled biopolymer that feels cool and substantial like polished temple stone.',
+    images: [
+      '/products/ganesh_image.jpeg'
+    ],
+    specifications: {
+      'Material': 'Marble/Stone Infused Organic PLA',
+      'Layer Height': '0.08mm Micro-Res Detail',
+      'Dimensions': '110mm x 85mm x 140mm',
+      'Finish': 'Matte Hand-Burnished Stone'
+    },
+    billOfMaterials: [
+      '1x High-Resolution 3D Printed Lord Ganesha Idol',
+      '1x Decorative Pedestal Base Plinth',
+      'Protective Velvet Gift Box'
+    ],
+    dimensions: '110mm x 85mm x 140mm',
+    materials: ['Stone-Infused PLA Biopolymer'],
+    colors: ['Ancient Temple Stone', 'Antique Bronze Finish', 'Pristine Marble White'],
+    assemblyOptions: ['Complete Sculpted Idol (Ready for Display)']
+  },
+  {
+    id: '3d-printed-custom-maker-mug',
+    name: '3D Printed Custom Maker Desk Mug & Pen Vessel',
+    category: '3D Printed Kits',
+    price: 499,
+    originalPrice: 699,
+    rating: 4.8,
+    reviewCount: 29,
+    inStock: true,
+    stockCount: 25,
+    isCustomOption: true,
+    badge: 'Desk Companion',
+    shortDescription: 'Geometric low-poly faceted 3D-printed desk mug and tool holder with ergonomic grip handle.',
+    fullDescription: 'A maker’s signature desk accessory. Crafted with parametric faceted geometry, this heavy-duty mug serves as an organizer for precision tweezers, calipers, hex drivers, or cool beverage can insulation holder.',
+    images: [
+      '/products/mug_image.jpeg'
+    ],
+    specifications: {
+      'Material': 'High-Glass-Transition Food-Grade PETG',
+      'Capacity': '350ml / Desk Tool Capacity',
+      'Dimensions': '125mm x 95mm x 105mm',
+      'Wall Thickness': '4mm Reinforced Dual-Wall'
+    },
+    billOfMaterials: [
+      '1x 3D-Printed Faceted Maker Mug Vessel with Ergonomic Handle'
+    ],
+    dimensions: '125mm x 95mm x 105mm',
+    materials: ['Tough PETG Polymer'],
+    colors: ['Cobalt Blue & Grey', 'Carbon Matte Black', 'Terracotta Orange'],
+    assemblyOptions: ['Standard Maker Vessel', 'Custom Name Engraved Edition (+₹100)']
+  },
+  {
+    id: '3d-printed-universal-component-holder',
+    name: '3D Printed Modular Component & Battery Holder Rig',
+    category: '3D Printed Kits',
+    price: 249,
+    originalPrice: 349,
+    rating: 4.8,
+    reviewCount: 18,
+    inStock: true,
+    stockCount: 40,
+    isCustomOption: false,
+    badge: 'Maker Hardware',
+    shortDescription: 'Snap-locking 3D-printed bracket for battery packs, microcontrollers, and DIY robotics sensor chassis.',
+    fullDescription: 'Eliminate zip-ties and messy tape on your prototypes. This modular 3D-printed holder secures 18650 cells, 9V clips, or 2xAA battery packs with integrated M3 countersunk mounting slots to easily attach to wooden or acrylic robot bodies.',
+    images: [
+      '/products/holder.jpeg'
+    ],
+    specifications: {
+      'Mounting Pattern': 'Standard 20mm & 30mm Spacing Holes',
+      'Material': 'Impact-Resistant PLA+ with Elastic Retention Tabs',
+      'Dimensions': '78mm x 45mm x 22mm'
+    },
+    billOfMaterials: [
+      '1x Modular 3D-Printed Battery & Electronics Mounting Rig',
+      '4x M3 Fastening Screws & Brass Washers'
+    ],
+    dimensions: '78mm x 45mm x 22mm',
+    materials: ['Impact-Tough PLA+'],
+    colors: ['Industrial Black', 'Signal Yellow', 'Clear Blue'],
+    assemblyOptions: ['Pack of 1 Holder', 'Pack of 3 Modular Holders (+₹200)']
+  },
+  {
+    id: 'maker-precision-assembly-tool-kit',
+    name: 'Maker Precision Assembly & Calibration Tool Set',
+    category: 'Robotics & Components',
+    price: 599,
+    originalPrice: 799,
+    rating: 4.9,
+    reviewCount: 35,
+    inStock: true,
+    stockCount: 30,
+    isCustomOption: false,
+    badge: 'Workshop Essential',
+    shortDescription: 'High-precision stainless steel tweezers, hex keys, flush wire cutters, and sanding sticks for kit assembly.',
+    fullDescription: 'Everything you need for smooth, effortless assembly of 3D-printed and wooden DIY kits. Includes ESD-safe fine curved tweezers, precision flush snips for clean support removal, metric hex wrenches, and ultra-fine grit sanding sticks to ensure friction-free gear meshing.',
+    images: [
+      '/products/image_tool.jpeg'
+    ],
+    specifications: {
+      'Tool Count': '6 Essential Maker Hand Tools',
+      'Steel Grade': 'Heat-Treated CR-V and Stainless Alloy',
+      'Grip': 'Ergonomic Non-Slip Rubberized Handles'
+    },
+    billOfMaterials: [
+      '1x Precision Flush Wire & Support Snippers',
+      '1x Curved Fine-Tip Anti-Static Tweezers',
+      '2x Dual-End Metric Hex Wrenches (M2, M2.5, M3)',
+      '2x Fine Contoured Sanding Sticks for Wood & 3D Prints',
+      'Durable Canvas Tool Pouch'
+    ],
+    dimensions: '210mm x 120mm x 35mm',
+    materials: ['CR-V Tool Steel', 'Non-Slip Rubber'],
+    colors: ['Signature Orange & Black'],
+    assemblyOptions: ['Complete 6-Piece Tool Kit in Canvas Pouch']
+  },
+
+  // --- WOODEN DIY & ROBOTICS KITS FROM PRODUCTS FOLDER ---
+  {
+    id: 'wooden-halloween-pumpkin-lantern',
+    name: 'Wooden Halloween Pumpkin LED Lantern Kit',
+    category: 'Wooden DIY Kits',
+    price: 299,
+    originalPrice: 399,
+    rating: 5.0,
+    reviewCount: 28,
+    inStock: true,
+    stockCount: 25,
+    isCustomOption: false,
+    badge: 'Festive Special',
+    shortDescription: 'Handcrafted wooden Jack-o\'-Lantern LED lamp kit that casts an eerie festive glow.',
+    fullDescription: 'A festive DIY maker kit designed with precision laser-profiled wood panels. Assemble the interlocking pumpkin shell and install the included high-luminosity red LED illumination unit for an eerie, captivating Halloween and festive table display. Operates with an easy snap-together design requiring no messy glue.',
+    images: [
+      '/products/halloween-pumpkin-lantern-1.jpg',
+      '/products/halloween-pumpkin-lantern-2.jpg',
+      '/products/halloween-pumpkin-lantern-3.jpg',
+      '/products/hallow_2.jpeg',
+      '/products/hallow_3.jpeg',
+      '/products/hellow_1.jpeg'
+    ],
+    specifications: {
+      'Wood Type': 'Laser-Cut Birch Plywood',
+      'Light Source': 'Red Glow LED Module Included',
+      'Assembly': 'Snap-fit Interlocking (Level 1/5)',
+      'Dimensions': '120mm x 110mm x 70mm',
+      'Power Source': '3V Battery Module with On/Off Toggle'
+    },
+    billOfMaterials: [
+      'Precision Laser-Cut Wooden Pumpkin Shell Plates',
+      'Vibrant Red LED Core Module',
+      'On/Off Switch & Battery Enclosure',
+      'Hanging Stem Hook Assembly',
+      'Illustrated Step-by-Step Guide'
+    ],
+    dimensions: '120mm x 110mm x 70mm',
+    materials: ['Natural Birch Plywood', 'LED Electronic Unit'],
+    colors: ['Pumpkin Orange Tint', 'Natural Wood'],
+    assemblyOptions: ['DIY Kit (Unassembled)', 'Pre-Assembled & Ready-to-Glow (+₹100)']
+  },
+  {
+    id: 'robot-smart-car-wheels-4pc',
+    name: 'Robot Smart Car Wheels (Set of 4)',
+    category: 'Robotics & Components',
+    price: 199,
+    originalPrice: 299,
+    rating: 4.8,
+    reviewCount: 42,
+    inStock: true,
+    stockCount: 40,
+    isCustomOption: false,
+    badge: 'Maker Essential',
+    shortDescription: 'Pack of 4 durable 65mm robotic smart car wheels with anti-skid rubber tires and 5-spoke yellow rims.',
+    fullDescription: 'High-traction wheel set engineered for DIY robotic rovers, smart cars, and obstacle-avoiding chassis. Features textured rubber treads for superior surface grip, durable injection-molded yellow hubs, and dual-flat center bore matching standard TT BO gear motors.',
+    images: [
+      '/products/robot-wheels-set-4.jpg',
+      '/products/weel.jpeg'
+    ],
+    specifications: {
+      'Diameter': '65mm (approx 2.5 inches)',
+      'Tire Width': '27mm',
+      'Shaft Hole': 'Dual-flat (D-shape) for TT Motor',
+      'Rim Color': 'Vibrant Yellow',
+      'Tire Material': 'Elastic Anti-Skid Rubber'
+    },
+    billOfMaterials: [
+      '4x 65mm Rubber Grip Wheels with 5-Spoke Yellow Hubs'
+    ],
+    dimensions: '65mm x 65mm x 27mm each',
+    materials: ['High-Elastic Rubber Tire', 'Impact-Resistant ABS Hub'],
+    colors: ['Yellow & Black'],
+    assemblyOptions: ['Set of 4 Wheels']
+  },
+  {
+    id: 'bo-gear-motor-tt-dual-shaft',
+    name: 'Dual Shaft TT BO Gear Motor (3V-6V)',
+    category: 'Robotics & Components',
+    price: 149,
+    originalPrice: 199,
+    rating: 4.9,
+    reviewCount: 56,
+    inStock: true,
+    stockCount: 60,
+    isCustomOption: false,
+    badge: 'Best Seller',
+    shortDescription: 'Dual output shaft DC reduction gearbox motor (1:48 ratio) for smart cars and robotics projects.',
+    fullDescription: 'The quintessential maker motor. High torque, durable reduction gearing with dual output shafts allowing encoder disc or dual wheel setups. Smooth performance between 3V and 6V DC, perfect for STEM educational projects, autonomous rovers, and motorized wooden DIY kits.',
+    images: [
+      '/products/bo-gear-motor-tt.jpg'
+    ],
+    specifications: {
+      'Operating Voltage': '3V to 6V DC',
+      'Gear Reduction Ratio': '1:48',
+      'No-load Speed': '200 RPM at 6V / 90 RPM at 3V',
+      'Shaft Style': 'Dual D-Shafts',
+      'Stall Torque': '0.8 kg-cm at 4.5V'
+    },
+    billOfMaterials: [
+      '1x Dual Shaft TT Gear Motor with Soldered Lead Terminals'
+    ],
+    dimensions: '70mm x 22mm x 18mm',
+    materials: ['Durable Plastic Gearbox & Copper Commutator DC Motor'],
+    colors: ['Signature Yellow & Clear'],
+    assemblyOptions: ['Standard Unit', 'Pack of 2 Motors (+₹120)']
+  },
+  {
+    id: 'electric-wooden-airplane',
+    name: 'Electric Wooden Airplane Kit',
+    category: 'Wooden DIY Kits',
+    price: 399,
+    originalPrice: 499,
+    rating: 4.9,
+    reviewCount: 31,
+    inStock: true,
+    stockCount: 20,
+    isCustomOption: false,
+    badge: 'Best Seller',
+    shortDescription: 'Build your own motorized wooden airplane with a front propeller and rolling wheels.',
+    fullDescription: 'A high-flying STEM construction project! Assemble laser-cut wooden fuselage and wing panels, install the battery compartment, and wire up the electric motor to power the front propeller.',
+    images: [
+      '/products/electric-airplane-1.jpg',
+      '/products/electric-airplane-2.jpg',
+      '/products/electric-airplane-3.jpg',
+      '/products/image_air.jpeg',
+      '/products/image_air2.jpeg',
+      '/products/image_air3.jpeg'
+    ],
+    specifications: {
+      'Material': 'Laser-Cut Plywood & ABS',
+      'Difficulty Level': 'Beginner (Level 1/5)',
+      'Power Source': 'AA Battery Box (Batteries not included)'
+    },
+    billOfMaterials: [
+      'Pre-cut Wooden Airplane Components',
+      'DC Electric Micro Motor',
+      'Orange Propeller',
+      'Wheels & Axle Set',
+      'Battery Pack & Power Switch'
+    ],
+    dimensions: '170mm x 160mm x 75mm',
+    materials: ['Laser-Cut Plywood', 'Electric Motor', 'Polymer Propeller'],
+    colors: ['Natural Wood with Orange Propeller'],
+    assemblyOptions: ['DIY Kit (Unassembled)', 'Pre-Assembled (+₹200)']
+  },
+  {
+    id: 'wooden-rc-car',
+    name: 'Wooden Remote Control Car Kit',
+    category: 'Wooden DIY Kits',
+    price: 599,
+    originalPrice: 799,
+    rating: 4.9,
+    reviewCount: 39,
+    inStock: true,
+    stockCount: 15,
+    isCustomOption: false,
+    badge: 'Best Seller',
+    shortDescription: 'Assemble a wireless remote control car with wooden chassis and off-road wheels.',
+    fullDescription: 'Combines woodworking craftsmanship with wireless electronic control. Construct a lightweight wooden car chassis, wire the RF wireless receiver board and motors, and drive it across the floor with the included handheld transmitter controller.',
+    images: [
+      '/products/wooden-rc-car.jpg',
+      '/products/image_car.jpeg'
+    ],
+    specifications: {
+      'Control': '27MHz Wireless Remote Controller',
+      'Chassis': 'Laser-Cut Plywood',
+      'Difficulty Level': 'Intermediate (Level 3/5)',
+      'Range': '10-15 Meters'
+    },
+    billOfMaterials: [
+      'Chassis Laser-Cut Plates',
+      '4 Off-Road Knobby Wheels',
+      'Drive Motor & Gearing',
+      'RF Transmitter & Receiver Circuit Boards',
+      'Antennas & Battery Clips'
+    ],
+    dimensions: '180mm x 140mm x 85mm',
+    materials: ['Plywood', 'Rubber Tires', 'Electronic PCB'],
+    colors: ['Natural Birch Wood & Black Wheels'],
+    assemblyOptions: ['DIY STEM Kit', 'Pre-Assembled & Calibrated (+₹350)']
+  },
+  {
+    id: 'wooden-motor-walking-kit',
+    name: 'Wooden Motor Walking Kit',
+    category: 'Wooden DIY Kits',
+    price: 349,
+    originalPrice: 449,
+    rating: 4.8,
+    reviewCount: 22,
+    inStock: true,
+    stockCount: 20,
+    isCustomOption: false,
+    badge: 'Trending',
+    shortDescription: 'A wooden motorized walking creature toy with kinetic linkage legs.',
+    fullDescription: 'Explore classical kinematic linkages. When powered, the geared motor rotates offset cams that swing multi-joint wooden legs in an organic crawling gait across any flat tabletop.',
+    images: [
+      '/products/wooden-walking-kit.jpg'
+    ],
+    specifications: {
+      'Mechanism': 'Mechanical Crank-Rocker Linkage',
+      'Material': 'Laser-Cut Plywood',
+      'Difficulty Level': 'Beginner (Level 2/5)',
+      'Power Source': 'Battery Powered'
+    },
+    billOfMaterials: [
+      'Laser-Cut Linkage Arms & Body Frame',
+      'Electric Gearmotor',
+      'Battery Holder',
+      'Connecting Rods & Fasteners'
+    ],
+    dimensions: '150mm x 100mm x 90mm',
+    materials: ['Birch Plywood', 'Electric Drive'],
+    colors: ['Natural Wood'],
+    assemblyOptions: ['DIY Kit (Assembly Required)']
+  },
+
+  // --- 3D PRINTED & CRAFTED AUTOMATA ---
   {
     id: 'prod-1',
     name: 'Precision Tourbillon Desk Automaton',
@@ -124,7 +618,7 @@ export const INITIAL_PRODUCTS = [
     isCustomOption: false,
     badge: 'Best Seller',
     shortDescription: 'Gravity-driven escapement clock with counterweights, pendulum regulator, and working gear train.',
-    fullDescription: 'A functional tribute to classical Renaissance horology. Operates entirely without batteries or electrical power — powered by gravity through a suspended lead/sand weight canister and ticking accurately via an adjustable counter-weighted pendulum.',
+    fullDescription: 'A functional tribute to classical Renaissance horology. Operates entirely without batteries or electrical power — powered by gravity through a suspended weight canister and ticking accurately via an adjustable counter-weighted pendulum.',
     images: [
       'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1000&q=80',
       'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=1000&q=80',
@@ -303,25 +797,33 @@ export const CATEGORIES = [
   {
     id: '3d-printed-kits',
     name: '3D Printed Kits',
-    tagline: 'Precision engineered kinetic escapements, mechanical models & robotic links.',
+    tagline: 'Precision 3D bionic spiders, tourbillons, robotic wheels & articulated automata.',
     icon: 'Printer',
-    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80',
-    count: 18
+    image: '/products/spider_3D.jpeg',
+    count: 24
   },
   {
     id: 'wooden-diy-kits',
     name: 'Wooden DIY Kits',
-    tagline: 'Artisan laser-crafted kinetic marble runs, pendulum clocks & mechanical vaults.',
+    tagline: 'Artisan laser-crafted walking spiders, RC cars, airplanes, clocks & marble runs.',
     icon: 'Trees',
-    image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80',
-    count: 24
+    image: '/products/spider_wood.jpeg',
+    count: 28
+  },
+  {
+    id: 'robotics-components',
+    name: 'Robotics & Components',
+    tagline: 'High-torque gear motors, 3D & rubber wheels, chassis hardware & tool sets.',
+    icon: 'Cpu',
+    image: '/products/weel.jpeg',
+    count: 18
   },
   {
     id: 'custom-prototypes',
     name: 'Custom Prototypes',
     tagline: 'Tailored rapid prototyping, custom drone chassis, IoT enclosures & CAD specs.',
-    icon: 'Cpu',
+    icon: 'Wrench',
     image: 'https://images.unsplash.com/photo-1527977966376-1c8408f9f108?auto=format&fit=crop&w=800&q=80',
-    count: 12
+    count: 15
   }
 ];
