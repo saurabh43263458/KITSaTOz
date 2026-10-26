@@ -135,10 +135,33 @@ ${formData.message}
             </div>
 
             <div className="flex items-start gap-3">
+              <Phone className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-slate-900">Phone & WhatsApp Inquiry</p>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <a href="tel:+918458877580" className="text-brand-600 hover:text-brand-700 font-semibold">
+                    +91 84588 77580
+                  </a>
+                  <span className="text-slate-300">|</span>
+                  <a 
+                    href={`https://wa.me/${whatsAppPhone}?text=Hi%20KITSaTOz!%20I%20have%20an%20inquiry.`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-emerald-600 hover:text-emerald-700 font-medium"
+                  >
+                    Chat on WhatsApp
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
               <Mail className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
               <div>
                 <p className="font-bold text-slate-900">Direct Email</p>
-                <p className="text-slate-500">support@kitsatoz.com / inquiries@kitsatoz.com</p>
+                <a href="mailto:kitsatoz@gmail.com" className="text-slate-600 hover:text-brand-600">
+                  kitsatoz@gmail.com
+                </a>
               </div>
             </div>
           </div>

@@ -4,7 +4,15 @@
  */
 
 export const getWhatsAppNumber = () => {
-  return import.meta.env.VITE_WHATSAPP_NUMBER || '919876543210';
+  return import.meta.env.VITE_WHATSAPP_NUMBER || '918458877580';
+};
+
+export const getInquiryNumber = () => {
+  return import.meta.env.VITE_INQUIRY_NUMBER || '+91 8458877580';
+};
+
+export const getDisplayPhoneNumber = () => {
+  return '+91 84588 77580';
 };
 
 export const generateWhatsAppOrderUrl = (order) => {

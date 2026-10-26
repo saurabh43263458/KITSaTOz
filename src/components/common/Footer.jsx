@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Hammer, MessageCircle, Mail, MapPin, Clock, ShieldCheck, Truck, RefreshCw } from 'lucide-react';
-import { getWhatsAppNumber } from '../../services/whatsappService';
+import { Hammer, MessageCircle, Mail, MapPin, Clock, ShieldCheck, Truck, RefreshCw, Phone } from 'lucide-react';
+import { getWhatsAppNumber, getDisplayPhoneNumber } from '../../services/whatsappService';
 
 export const Footer = () => {
   const whatsAppPhone = getWhatsAppNumber();
@@ -143,8 +143,14 @@ export const Footer = () => {
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-brand-400 shrink-0" />
-                <a href="mailto:support@kitsatoz.com" className="hover:text-brand-400">
+                <a href="mailto:kitsatoz@gmail.com" className="hover:text-brand-400">
                   kitsatoz@gmail.com
+                </a>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Phone className="w-4 h-4 text-brand-400 shrink-0" />
+                <a href="tel:+918458877580" className="hover:text-brand-400 font-medium">
+                  +91 84588 77580
                 </a>
               </li>
             </ul>
