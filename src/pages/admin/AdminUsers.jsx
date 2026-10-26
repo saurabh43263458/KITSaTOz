@@ -239,9 +239,18 @@ export const AdminUsers = () => {
                   <tr key={u.uid || u.email} className="hover:bg-slate-900/40 transition-colors">
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-slate-800 text-brand-400 font-bold flex items-center justify-center border border-slate-700 uppercase">
-                          {u.displayName ? u.displayName[0] : (u.email ? u.email[0] : 'U')}
-                        </div>
+                        {u.photoURL ? (
+                          <img
+                            src={u.photoURL}
+                            alt={u.displayName || 'User'}
+                            referrerPolicy="no-referrer"
+                            className="w-8 h-8 rounded-full object-cover border border-slate-700"
+                          />
+                        ) : (
+                          <div className="w-8 h-8 rounded-full bg-slate-800 text-brand-400 font-bold flex items-center justify-center border border-slate-700 uppercase">
+                            {u.displayName ? u.displayName[0] : (u.email ? u.email[0] : 'U')}
+                          </div>
+                        )}
                         <div>
                           <p className="font-bold text-white">{u.displayName || u.email.split('@')[0]}</p>
                           <p className="text-[11px] text-slate-400">{u.email}</p>

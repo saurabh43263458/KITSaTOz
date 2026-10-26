@@ -168,9 +168,18 @@ export const Profile = () => {
             ) : (
               <div className="space-y-3.5 text-xs text-slate-600">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold">
-                    {user?.displayName ? user.displayName[0].toUpperCase() : 'U'}
-                  </div>
+                  {user?.photoURL ? (
+                    <img 
+                      src={user.photoURL} 
+                      alt={user.displayName || 'Maker'} 
+                      referrerPolicy="no-referrer"
+                      className="w-9 h-9 rounded-full object-cover border border-brand-200 shadow-xs"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold">
+                      {user?.displayName ? user.displayName[0].toUpperCase() : 'U'}
+                    </div>
+                  )}
                   <div>
                     <p className="font-bold text-slate-900">{user?.displayName || 'Registered Maker'}</p>
                     <p className="text-[11px] text-slate-400">{user?.email}</p>

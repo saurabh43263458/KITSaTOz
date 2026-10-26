@@ -6,6 +6,7 @@ import { toast } from '../store/toastStore';
 export const Contact = () => {
   const whatsAppPhone = getWhatsAppNumber();
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -14,8 +15,56 @@ export const Contact = () => {
     message: ''
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const accessKey = import.meta.env.VITE_WEB3FORMS_KEY;
+    const adminEmail = (import.meta.env.VITE_ADMIN_EMAIL || 'sm427878@gmail.com').split(',')[0].trim();
+
+    setSubmitting(true);
+
+    if (accessKey) {
+      try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            access_key: accessKey,
+            subject: `[KITSaTOz Contact] ${formData.subject} from ${formData.name}`,
+            from_name: 'KITSaTOz Contact Desk',
+            to_email: adminEmail,
+            replyto: formData.email,
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone || 'N/A',
+            topic: formData.subject,
+            message: `
+New Contact Inquiry from ${formData.name}
+---------------------------------------------
+Name: ${formData.name}
+Email: ${formData.email}
+Phone: ${formData.phone || 'N/A'}
+Topic: ${formData.subject}
+
+Message:
+${formData.message}
+---------------------------------------------
+`
+          })
+        });
+
+        const data = await response.json();
+        if (!data.success) {
+          console.warn('[Web3Forms Warning]:', data.message);
+        }
+      } catch (err) {
+        console.error('Web3Forms dispatch error:', err);
+      }
+    }
+
+    setSubmitting(false);
     setSubmitted(true);
     toast.success('Message Received!', 'Our engineering support team will respond within 24 hours.');
   };
@@ -202,10 +251,11 @@ export const Contact = () => {
 
                 <button
                   type="submit"
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs shadow-soft transition-all"
+                  disabled={submitting}
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs shadow-soft transition-all disabled:opacity-60"
                 >
                   <Send className="w-4 h-4" />
-                  <span>Send Message</span>
+                  <span>{submitting ? 'Sending Message...' : 'Send Message'}</span>
                 </button>
 
               </form>

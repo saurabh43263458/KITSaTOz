@@ -20,6 +20,23 @@ export const sendOrderEmailNotification = async (order) => {
       .join(', ')
   };
 
+  const formattedMessage = `
+New Order Received on KITSaTOz!
+----------------------------------
+Order ID: #${order.id}
+Customer: ${order.customerName}
+Phone: ${order.phone}
+Email: ${order.email || 'Not provided'}
+Shipping Address: ${order.address}, PIN: ${order.pincode}
+Customization Notes: ${order.customizationNotes || 'None'}
+
+Total Amount: ₹${(order.totalAmount || order.total || 0).toLocaleString()}
+
+Items Ordered:
+${(order.items || []).map((i, idx) => `${idx + 1}. ${i.name} — Qty: ${i.quantity || i.qty || 1} @ ₹${i.price}`).join('\n')}
+----------------------------------
+`;
+
   // If user configured a Web3Forms access key
   if (web3FormsAccessKey) {
     try {
@@ -31,13 +48,21 @@ export const sendOrderEmailNotification = async (order) => {
         },
         body: JSON.stringify({
           access_key: web3FormsAccessKey,
+          subject: emailPayload.subject,
           from_name: 'KITSaTOz Store',
           to_email: primaryAdminEmail,
+          replyto: order.email || undefined,
+          message: formattedMessage,
           ...emailPayload
         })
       });
+
       const data = await response.json();
-      return { success: data.success, simulated: false };
+      if (!data.success) {
+        console.warn('[Web3Forms Warning]:', data.message || 'Submission failed');
+        return { success: false, error: data.message, simulated: false };
+      }
+      return { success: true, simulated: false };
     } catch (err) {
       console.error('Failed to send email via Web3Forms, falling back:', err);
     }

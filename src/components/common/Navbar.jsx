@@ -144,9 +144,18 @@ export const Navbar = () => {
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                   className="flex items-center gap-2 py-1.5 pl-2 pr-3 bg-white border border-wood-200/80 rounded-full hover:border-brand-400 transition-all shadow-xs"
                 >
-                  <div className="w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-xs flex items-center justify-center">
-                    {user.displayName ? user.displayName[0].toUpperCase() : 'U'}
-                  </div>
+                  {user.photoURL ? (
+                    <img 
+                      src={user.photoURL} 
+                      alt={user.displayName || 'User'} 
+                      referrerPolicy="no-referrer"
+                      className="w-7 h-7 rounded-full object-cover border border-brand-200"
+                    />
+                  ) : (
+                    <div className="w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-xs flex items-center justify-center">
+                      {user.displayName ? user.displayName[0].toUpperCase() : 'U'}
+                    </div>
+                  )}
                   <span className="hidden sm:inline text-xs font-semibold text-slate-700 max-w-[100px] truncate">
                     {user.displayName || user.email.split('@')[0]}
                   </span>

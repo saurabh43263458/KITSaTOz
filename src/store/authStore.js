@@ -3,6 +3,8 @@ import {
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword, 
   signInWithPopup, 
+  signInWithRedirect,
+  getRedirectResult,
   signOut, 
   onAuthStateChanged,
   updateProfile as updateFirebaseProfile
@@ -31,9 +33,37 @@ export const useAuthStore = create((set, get) => {
     loading: false,
     authInitialized: false,
 
-    // Initialize Auth Listener with Firebase
+    // Initialize Auth Listener with Firebase and handle potential redirect logins
     initializeAuth: () => {
       if (isFirebaseConfigured && auth) {
+        // Handle redirect result (useful when popup is blocked or on mobile)
+        getRedirectResult(auth)
+          .then((result) => {
+            if (result?.user) {
+              const firebaseUser = result.user;
+              const role = checkIsAdmin(firebaseUser.email) ? 'admin' : 'customer';
+              const userObj = {
+                uid: firebaseUser.uid,
+                email: firebaseUser.email,
+                displayName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Maker',
+                photoURL: firebaseUser.photoURL || null,
+                role: role,
+                isFirebase: true
+              };
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(userObj));
+              set({ user: userObj, authInitialized: true });
+              try {
+                useUserStore.getState().addUser(userObj);
+                syncUserToFirestore(userObj);
+              } catch (e) {
+                // ignore
+              }
+            }
+          })
+          .catch((err) => {
+            console.warn('Redirect sign-in error:', err);
+          });
+
         onAuthStateChanged(auth, (firebaseUser) => {
           if (firebaseUser) {
             const role = checkIsAdmin(firebaseUser.email) ? 'admin' : 'customer';
@@ -140,31 +170,70 @@ export const useAuthStore = create((set, get) => {
       set({ loading: true });
       try {
         if (!isFirebaseConfigured || !auth || !googleProvider) {
-          throw new Error('Firebase Authentication is not configured.');
+          throw new Error('Firebase Authentication is not configured in .env.');
         }
 
-        const result = await signInWithPopup(auth, googleProvider);
+        let result;
+        try {
+          result = await signInWithPopup(auth, googleProvider);
+        } catch (popupErr) {
+          // If popup is blocked by the browser, fallback to redirect sign-in
+          if (popupErr.code === 'auth/popup-blocked') {
+            console.warn('Popup blocked, initiating signInWithRedirect...');
+            await signInWithRedirect(auth, googleProvider);
+            return { success: true, redirecting: true };
+          }
+          throw popupErr;
+        }
+
         const firebaseUser = result.user;
         const role = checkIsAdmin(firebaseUser.email) ? 'admin' : 'customer';
         const userObj = {
           uid: firebaseUser.uid,
           email: firebaseUser.email,
-          displayName: firebaseUser.displayName || firebaseUser.email.split('@')[0],
-          photoURL: firebaseUser.photoURL,
+          displayName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Maker',
+          photoURL: firebaseUser.photoURL || null,
           role: role,
           isFirebase: true
         };
+
+        // Cache session
         localStorage.setItem(STORAGE_KEY, JSON.stringify(userObj));
+
+        // Automatically record user profile in local store and sync to Firestore
+        try {
+          useUserStore.getState().addUser(userObj);
+          syncUserToFirestore(userObj);
+        } catch (syncErr) {
+          console.warn('Could not sync Google user profile:', syncErr);
+        }
+
         set({ user: userObj, loading: false });
-        return { success: true };
+        return { success: true, user: userObj };
       } catch (err) {
         set({ loading: false });
         let friendlyMsg = err.message;
         if (err.code === 'auth/popup-closed-by-user') {
-          friendlyMsg = 'Sign in popup was closed before completing.';
+          friendlyMsg = 'Google sign-in popup was closed before completing.';
+        } else if (err.code === 'auth/popup-blocked') {
+          friendlyMsg = 'The Google sign-in window was blocked by your browser. Please allow popups for this site.';
+        } else if (err.code === 'auth/unauthorized-domain') {
+          friendlyMsg = 'This domain is not authorized in Firebase Console. Please add this domain to Firebase Auth > Settings > Authorized Domains.';
+        } else if (err.code === 'auth/operation-not-allowed') {
+          friendlyMsg = 'Google Sign-In is not enabled. Please enable Google provider in Firebase Authentication > Sign-in method.';
+        } else if (err.code === 'auth/account-exists-with-different-credential') {
+          friendlyMsg = 'An account already exists with this email using a different sign-in method. Please sign in with email and password.';
+        } else if (err.code === 'auth/cancelled-popup-request') {
+          friendlyMsg = 'Previous Google sign-in attempt was cancelled. Please try again.';
+        } else if (err.code === 'auth/network-request-failed') {
+          friendlyMsg = 'Network error during Google authentication. Please check your internet connection.';
         }
-        return { success: false, error: friendlyMsg };
+        return { success: false, error: friendlyMsg, code: err.code };
       }
+    },
+
+    registerWithGoogle: async () => {
+      return get().loginWithGoogle();
     },
 
     logout: async () => {

@@ -32,6 +32,10 @@ if (isFirebaseConfigured) {
     db = getFirestore(app);
     storage = getStorage(app);
     googleProvider = new GoogleAuthProvider();
+    // Prompt users to select an account every time, preventing silent auto-login to unwanted accounts
+    googleProvider.setCustomParameters({
+      prompt: 'select_account'
+    });
   } catch (error) {
     console.warn("Firebase initialization skipped or failed, falling back to local simulation mode:", error);
   }

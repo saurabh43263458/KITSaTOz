@@ -44,6 +44,8 @@ export const syncUserToFirestore = async (userData) => {
       uid: userData.uid,
       displayName: userData.displayName || userData.email?.split('@')[0] || 'Customer',
       email: userData.email,
+      photoURL: userData.photoURL || null,
+      provider: userData.photoURL ? 'google' : 'password',
       role: userData.role || 'customer',
       city: userData.city || 'India',
       registeredAt: userData.registeredAt || new Date().toISOString().split('T')[0],

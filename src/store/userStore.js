@@ -60,6 +60,8 @@ export const useUserStore = create((set, get) => {
         uid: user.uid || 'usr-' + Date.now(),
         displayName: user.displayName || user.email.split('@')[0],
         email: user.email,
+        photoURL: user.photoURL || null,
+        provider: user.provider || (user.photoURL ? 'google' : 'password'),
         role: user.role || 'customer',
         ordersCount: Number(user.ordersCount || 0),
         totalSpent: Number(user.totalSpent || 0),
